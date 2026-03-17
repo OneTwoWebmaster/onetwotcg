@@ -152,7 +152,7 @@ export const handler = async (event) => {
     }));
 
     // Give instructions to Stripe - what/how (add process.env.SITE_URL || as baseURL when live)
-    const baseURL = "http://localhost:8888";
+    const baseURL = process.env.SITE_URL || "http://localhost:8888";
 
     const shippingOptions = [
         {
