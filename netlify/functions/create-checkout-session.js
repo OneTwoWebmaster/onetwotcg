@@ -1,5 +1,4 @@
 // Import
-import { PRODUCTS } from "../../shared/products.js";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js"
 
@@ -62,10 +61,11 @@ export const handler = async (event) => {
 
     const productById = new Map(products.map((p) => [p.id, p]));
 
-    // Build safe validated items
+    // Precursor to Build safe validated items
     const validatedItems = [];
     let totalPennies = 0;
 
+    // Build safe validated items
     for (const item of data.items) {
         const product = productById.get(item.id);
         if (!product) {
@@ -103,6 +103,15 @@ export const handler = async (event) => {
         });
     }
 
+    // Determine shipping amount
+    let shippingAmount = 0;
+    let shippingMethod = "free";
+
+    if (totalPennies < 5000) {
+        shippingAmount = 329;
+        shippingMethod = "standard";
+    }
+
     // Stop if no valid items
     if (validatedItems.length === 0) {
         return {
@@ -119,6 +128,8 @@ export const handler = async (event) => {
         currency: "gbp",
         amount_total: totalPennies,
         items: validatedItems,
+        shipping_amount: shippingAmount,
+        shipping_method: shippingMethod,
     })
     .select()
     .single();
@@ -141,7 +152,20 @@ export const handler = async (event) => {
     }));
 
     // Give instructions to Stripe - what/how (add process.env.SITE_URL || as baseURL when live)
-    const baseURL = "http://localhost:8888"
+    const baseURL = "http://localhost:8888";
+
+    const shippingOptions = [
+        {
+            shipping_rate_data: {
+                type: "fixed_amount",
+                fixed_amount: {
+                    amount: shippingAmount,
+                    currency: "gbp",
+                },
+                display_name: shippingMethod === "free" ? "Free UK Priority Shipping" : "UK Priority Shipping",
+            },
+        },
+    ]
 
     let session;
     try {
@@ -150,12 +174,19 @@ export const handler = async (event) => {
         line_items,
         success_url: `${baseURL}/cart/index.html?success=1`,
         cancel_url: `${baseURL}/cart/index.html?canceled=1`,
-        client_reference_id: order.id,
+        client_reference_id: String(order.id),
+        metadata: {
+            order_id: String(order.id),
+            shipping_method: shippingMethod,
+            shipping_amount: String(shippingAmount),
+        },
         shipping_address_collection: {
             allowed_countries: ["GB"],
         },
+        billing_address_collection: "auto",
         phone_number_collection: { enabled: true },
-        })
+        shipping_options: shippingOptions,
+    });
     } catch (e) {
         console.error("Stripe session create failed:", e);
         await supabase.from("orders")

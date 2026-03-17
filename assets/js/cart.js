@@ -1,14 +1,13 @@
 // Imports
 import { PRODUCTS } from "../../shared/products.js";
+import { loadCart, saveCart, clearCart } from "../../shared/cart-store.js"
+import { updateCartUI } from "./app.js";
 
 // DOM
 const cartEmpty = document.querySelector('#cartEmpty');
 const cartItems = document.querySelector('#cartItems');
 const cartTotal = document.querySelector('#cartTotal');
 const checkoutContainer = document.querySelector('#checkoutContainer');
-
-// Key for Cart
-const CART_KEY = 'oneTwoTcgCart';
 
 // Utilities
 const penniesToPounds = pennies => (pennies / 100).toFixed(2);
@@ -34,13 +33,7 @@ const state = {
     cart: {}
 }
 
-// Local Storage
-try {
-    const saved = localStorage.getItem(CART_KEY);
-    state.cart = saved ? JSON.parse(saved) : {};
-} catch {
-    state.cart = {};
-}
+state.cart = loadCart();
 
 // Render logic
 const renderCartPage = state => {
@@ -52,11 +45,19 @@ const renderCartPage = state => {
     cartTotal.textContent = '';
     checkoutContainer.textContent = '';
 
+    cartEmpty.hidden = true;
+    cartItems.hidden = false;
+
     if (entries.length === 0) {
+        cartEmpty.hidden = false;
+        cartItems.hidden = true;
+
         cartEmpty.textContent = 'Your cart is empty.';
         cartTotal.textContent = 'Total: £0.00';
         return;
     }
+
+    cartItems.style.display = "";
 
     let totalPennies = 0;
 
@@ -71,18 +72,26 @@ const renderCartPage = state => {
         const atMax = qty >= product.stock;
         
         const row = document.createElement('div');
+        row.classList.add('cart-row');
         row.innerHTML = `
-        <div><strong>${product.name}</strong></div>
-        <div>Unit: £${penniesToPounds(product.price)}</div>
-        <div>Qty: ${qty}</div>
-        <div>Sub-total: £${penniesToPounds(linePennies)}</div>
-        <div>
-            <button data-action="dec" data-id="${product.id}" ${atMin ? "disabled" : ""}>-</button>
-            <input type="number" data-id="${product.id}" min ="0" max="${product.stock}" step="1" size="2" value="${qty}" />
-            <button data-action="inc" data-id="${product.id}" ${atMax ? "disabled" : ""}>+</button>
+        <div class ="cart-left">
+        <strong>${product.name}</strong>
+        </div>
+
+        <div class="cart-mid">
+            <div>Unit: £${penniesToPounds(product.price)}</div>
+            <div>Qty: ${qty}</div>
+            <div class="qty-controls">
+                <button data-action="dec" data-id="${product.id}" ${atMin ? "disabled" : ""}>-</button>
+                <input type="number" data-id="${product.id}" min ="0" max="${product.stock}" step="1" size="2" value="${qty}" />
+                <button data-action="inc" data-id="${product.id}" ${atMax ? "disabled" : ""}>+</button>
+            </div>
+        </div>
+
+        <div class="cart-right">
+            <div>Sub-total: £${penniesToPounds(linePennies)}</div>
             <button data-action="remove" data-id="${product.id}">Remove</button>
         </div>
-        <hr />
         `;
         cartItems.appendChild(row);
     }
@@ -164,11 +173,10 @@ checkoutContainer.addEventListener('click', async e => {
 // State updater
 const setState = updater => {
     updater(state);
-    localStorage.setItem(CART_KEY, JSON.stringify(state.cart));
+    saveCart(state.cart)
+    updateCartUI();
     renderCartPage(state);
 }
-
-console.log(state.cart);
 
 // Final render
 await applyLiveFieldsToProducts(state.products);
@@ -182,16 +190,25 @@ const canceled = params.get('canceled');
 if (success === '1') {
     // clear cart
     state.cart = {};
-    localStorage.removeItem(CART_KEY);
+    clearCart();
+    updateCartUI();
+
     // show message
+    cartEmpty.hidden = false;
+    cartItems.hidden = true;
+
     cartEmpty.textContent = 'Payment was successful';
     cartItems.innerHTML = "";
     cartTotal.textContent = "Total: £0.00";
     checkoutContainer.textContent = "";
 
     history.replaceState({}, "", window.location.pathname);
-} 
+}
+
 if (canceled === "1") {
+    cartEmpty.hidden = false;
+    cartItems.hidden = true;
+
     cartEmpty.textContent = 'Checkout cancelled';
     history.replaceState({}, "", window.location.pathname);
 }

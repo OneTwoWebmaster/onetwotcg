@@ -6,33 +6,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>One Two TCG</title>
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/store.css">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
     <header>
-        <nav class="template">
+        <div class="container">
+            <nav class="template">
 
-        </nav>
+            </nav>
+        </div>
     </header>
 
     <main>
-        <div id="landing">
-            We finally made it
-            <div id="productName"></div>
-            <div id="numberStock"></div>
-        </div>
-        <div>
-            <button disabled id="landingButton" label="Alakazam">I am a disabled button</button>
-        </div>
+        <section class="home-hero">
+            <div class="container">
+                Welcome to One Two TCG, an independent, balling seller of Pokemon booster packs!
+            </div>
+        </section>
+
+        <section class="home-new">
+            <div class="container">
+                <h2 id="new-arrivals">New Arrivals</h2>
+                <div class="product-grid" id="newArrivals"></div>
+            </div>
+        </section>
+
+        <section class="home-hot">
+            <div class="container">
+                <h2 id="hot-products">Hot Products</h2>
+                <div class="product-grid" id="hotProducts"></div>
+            </div>
+        </section>
+
+        <section class="home-news">
+            <div class="container">
+                <h2 id="latest-news">Latest News</h2>
+                <div class="news-grid" id="latestNews">
+                    7th March 2026 - Welcome to One Two TCG, the sworn enemy of "out of stock", trying to navigate you through the choppy waters of cracking Pokemon packs in 2026. We won't promise to bring your RRP (at least not until the market calms down or we get distro) but we can guarantee you competitive market prices and a bundle of 'in stock' notifications.
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
-        This is where footer content will go.
+        <div class="container footer">
+            
+        </div>
     </footer>
 
     <script type="module" src="/assets/js/app.js"></script>
+    <script type="module" src="/assets/js/landing.js"></script>
     
 </body>
 

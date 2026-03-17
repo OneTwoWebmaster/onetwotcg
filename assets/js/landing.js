@@ -1,46 +1,123 @@
-const divLanding = document.querySelector('#landing');
-const changeButton = document.querySelector('#landingButton');
-const productName = document.querySelector('#productName');
-const numberStock = document.querySelector('#numberStock');
+// Modules
+import { PRODUCTS } from "/shared/products.js";
+import { loadCart, saveCart } from "/shared/cart-store.js";
+import { updateCartUI } from "/assets/js/app.js";
 
-const landingState = {
-    message: "Sword & Shield Base Booster Box",
-    count: 10,
-    products: [
-        {
-            name: "Scarlet & Violet Base Booster Pack",
-            price: 499,
-            stock: 36,
-            images: [
-                "/assets/images/scarlet-violet-booster-pack-01.jpg",
-                "/assets/images/scarlet-violet-booster-pack-02.jpg",
-                "/assets/images/scarlet-violet-booster-pack-03.jpg",
-                "/assets/images/scarlet-violet-booster-pack-04.jpg"
-            ],
-            description: "Includes 36 booster packs from the Pokémon TCG: Scarlet & Violet expansion. Each booster pack contains 10 cards and 1 Basic Energy. Cards vary by pack."
-        }
-    ]
-};
+// DOM
+const newArrivals = document.querySelector('#newArrivals');
+const hotProducts = document.querySelector('#hotProducts');
+const latestNews = document.querySelector('#latestNews');
 
-const renderLandingPage = (landingState) => {
-    productName.textContent = landingState.message;
-    if (landingState.count === 0) {
-        numberStock.textContent = 'Out of stock';
-    } else if (landingState.count > 0) {
-        numberStock.textContent = `${landingState.count} in stock`;
-    }
+// Utilities
+const penniesToPounds = pennies => (pennies / 100).toFixed(2);
+
+const state = {
+    products: PRODUCTS,
+    cart: {}
 }
 
-const setState = updater => {
-    updater(landingState);
-    renderLandingPage(landingState);
-}
+state.cart = loadCart();
 
-renderLandingPage(landingState);
-
-changeButton.addEventListener("click", () => {
-    setState( (state) => {
-        state.message = "Fuck you all....";
-        state.count -= 1;
-    })
+// New arrivals
+const newest = [...state.products].sort((a, b) => {
+    return new Date(b.releaseDate) - new Date(a.releaseDate);
 })
+
+const newestFour = newest.slice(0, 4);
+newArrivals.innerHTML = "";
+
+for (const product of newestFour) {
+    const qtyInCart = state.cart[product.id] || 0;
+    const soldOut = product.stock <= 0;
+    const maxedOut = qtyInCart >= product.stock && product.stock > 0;
+    const disabledAdd = soldOut || maxedOut;
+
+    let buttonLabel = "ADD TO BASKET";
+    if (soldOut) {
+      buttonLabel = "OUT OF STOCK";
+    } else if (maxedOut) {
+      buttonLabel = `ADD TO BASKET (${qtyInCart})`;
+    } else if (qtyInCart > 0) {
+      buttonLabel = `ADD TO BASKET (${qtyInCart})`;
+    }
+
+    newArrivals.innerHTML += `
+      <article class="product-card">
+        <a class="product-media" href="product.html?id=${product.id}">
+          <img class="product-img" src="${product.images[0]}" height="200" />
+        </a>
+        <div class="product-body">
+          <a class="product-name" href="product.html?id=${product.id}">${product.name}</a>
+          <div class="product-meta">
+            <div class="product-price">£${penniesToPounds(product.price)}</div>
+            <div class="stock-status">${product.stock} in stock</div>
+          </div>
+          <button class="btn btn-primary add-to-basket" data-id="${product.id}" type="button">${buttonLabel}</button>
+        </div>
+      </article>
+    `;
+}
+
+// Hot Products
+const hot = state.products.filter(product => product.tags?.includes("hot"));
+const hotFour = hot.slice(0, 4);
+
+hotProducts.innerHTML = "";
+
+for (const product of hotFour) {
+    const qtyInCart = state.cart[product.id] || 0;
+    const soldOut = product.stock <= 0;
+    const maxedOut = qtyInCart >= product.stock && product.stock > 0;
+    const disabledAdd = soldOut || maxedOut;
+
+    let buttonLabel = "ADD TO BASKET";
+    if (soldOut) {
+      buttonLabel = "OUT OF STOCK";
+    } else if (maxedOut) {
+      buttonLabel = `ADD TO BASKET (${qtyInCart})`;
+    } else if (qtyInCart > 0) {
+      buttonLabel = `ADD TO BASKET (${qtyInCart})`;
+    }
+
+    hotProducts.innerHTML += `
+      <article class="product-card">
+        <a class="product-media" href="product.html?id=${product.id}">
+          <img class="product-img" src="${product.images[0]}" height="200" />
+        </a>
+        <div class="product-body">
+          <a class="product-name" href="product.html?id=${product.id}">${product.name}</a>
+          <div class="product-meta">
+            <div class="product-price">£${penniesToPounds(product.price)}</div>
+            <div class="stock-status">${product.stock} in stock</div>
+          </div>
+          <button class="btn btn-primary add-to-basket" data-id="${product.id}" type="button">${buttonLabel}</button>
+        </div>
+      </article>
+    `;
+}
+
+document.addEventListener("click", e => {
+    const btn = e.target.closest("button[data-id]");
+    if (!btn) return;
+
+    const id = btn.dataset.id;
+    const product = state.products.find(p => p.id === id);
+    if (!product) return;
+
+    if (product.stock <= 0) return;
+
+    state.cart = loadCart();
+
+    const current = state.cart[id] || 0;
+    if (current >= product.stock) return;
+
+    state.cart[id] = current + 1;
+    saveCart(state.cart);
+
+    updateCartUI();
+
+    btn.textContent = `ADD TO BASKET (${state.cart[id]})`;
+    if (state.cart[id] >= product.stock) {
+        btn.disabled = true;
+    }
+});

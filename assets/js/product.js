@@ -1,5 +1,7 @@
 // Modules
 import { PRODUCTS } from "../../shared/products.js";
+import { loadCart, saveCart } from "../../shared/cart-store.js";
+import { updateCartUI } from "./app.js";
 
 // DOM
 const productName = document.querySelector('#productName');
@@ -20,22 +22,11 @@ async function fetchLiveProduct(id) {
   const data = await res.json();
   return data.products.find(p => p.id === id) ?? null;
 }
-     
-// Storage Key & State
-const CART_KEY = 'oneTwoTcgCart';
 
 const state = {
   products: PRODUCTS,
   cart: {}
 };
-
-// Local Storage
-try {
-    const savedCart = localStorage.getItem(CART_KEY);
-    state.cart = savedCart ? JSON.parse(savedCart) : {};
-} catch {
-    state.cart = {};
-}
 
 // Render
 const renderProductPage = (state) => {
@@ -43,6 +34,38 @@ const renderProductPage = (state) => {
     const id = params.get('id');
     const product = state.products.find(p => p.id === id);
     const qtyInBasket = state.cart[product.id] || 0;
+
+    const remainingStock = product.stock - qtyInBasket;
+    if (remainingStock <= 0) {
+        numInput.value = 0;
+    } else if (Number(numInput.value) > remainingStock) {
+        numInput.value = remainingStock;
+    } else if (Number(numInput.value) < 1) {
+        numInput.value = 1;
+    }
+
+    const soldOut = product.stock <= 0;
+    const maxedOut = remainingStock <= 0;
+
+    cartBtn.disabled = soldOut || maxedOut;
+    incBtn.disabled = soldOut || Number(numInput.value) >= remainingStock;
+    numInput.disabled = soldOut || maxedOut;
+    decBtn.disabled = Number(numInput.value) <= 1;
+    numInput.max = remainingStock;
+
+    if (soldOut) {
+        cartBtn.textContent = 'Out of Stock';
+    } else if (qtyInBasket > 0) {
+        cartBtn.textContent = `Add to Basket (${qtyInBasket})`;
+    } else {
+        cartBtn.textContent = 'Add to Basket';
+    }
+
+    if (soldOut) {
+        numInput.value = 0;
+    } else if (Number(numInput.value) < 1) {
+        numInput.value = 1;
+    }
     
     productName.textContent = product.name;
     productPrice.textContent = `£${penniesToPounds(product.price)}`;
@@ -52,8 +75,7 @@ const renderProductPage = (state) => {
         stockCount.textContent = `${product.stock} in stock`;
     };
     image.src = product.images[0];
-    image.height = 250;
-    image.alt = 'Scarlet & Violet Booster Pack';
+    image.alt = product.name;
     description.innerHTML = product.description;
 
     inCart.textContent = qtyInBasket > 0 ? `${qtyInBasket} in basket` : "";
@@ -61,8 +83,10 @@ const renderProductPage = (state) => {
 
 // Setting the State
 const setState = updater => {
+    state.cart = loadCart();
     updater(state);
-    localStorage.setItem(CART_KEY, JSON.stringify(state.cart));
+    saveCart(state.cart);
+    updateCartUI();
     renderProductPage(state);
 }
 
@@ -84,10 +108,17 @@ fetchLiveProduct(id).then(live => {
 
 // Event Listeners
 decBtn.addEventListener('click', () => {
+    if (Number(numInput.value) <= 1) return;
     numInput.value = Number(numInput.value) -1;
 })
 
 incBtn.addEventListener('click', () => {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const product = state.products.find(p => p.id === id);
+    if (!product) return;
+
+    if (Number(numInput.value) >= product.stock) return;
     numInput.value = Number(numInput.value) + 1; 
 })
 
@@ -96,9 +127,16 @@ cartBtn.addEventListener('click', () => {
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
         const product = state.products.find(p => p.id === id);
+        if (!product) return;
+
+        if (product.stock <= 0) return;
+
+        state.cart = loadCart();
 
         const qty = Number(numInput.value);
         const current = state.cart[id] || 0;
+
+        if (current + qty > product.stock) return;
 
         state.cart[id] = current + qty;
     })

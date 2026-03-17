@@ -1,7 +1,14 @@
 export const PRODUCTS = [
     {
     id: 'scarlet-violet-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Scarlet & Violet Base Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "scarlet-and-violet-base",
+    releaseDate: "2023-03-31",
+    tags: [],
     price: 449,
     stock: 18,
     images: [
@@ -14,7 +21,14 @@ export const PRODUCTS = [
     },
     {
     id: 'paldea-evolved-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Paldea Evolved Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: [],
     price: 599,
     stock: 18,
     images: [
@@ -28,7 +42,14 @@ export const PRODUCTS = [
     },
     {
     id: 'obsidian-flames-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Obsidian Flames Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: [],
     price: 649,
     stock: 10,
     images: [
@@ -41,7 +62,14 @@ export const PRODUCTS = [
     },
     {
     id: '151-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "151 Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: ["hot"],
     price: 1499,
     stock: 10,
     images: [
@@ -51,7 +79,14 @@ export const PRODUCTS = [
     },
     {
     id: 'paradox-rift-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Paradox Rift Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: [],
     price: 449,
     stock: 18,
     images: [
@@ -64,7 +99,14 @@ export const PRODUCTS = [
     },
     {
     id: 'paldean-fates-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Paldean Fates Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: [],
     price: 1399,
     stock: 11,
     images: [
@@ -77,7 +119,14 @@ export const PRODUCTS = [
     },
     {
     id: 'temporal-forces-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Temporal Forces Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: [],
     price: 549,
     stock: 18,
     images: [
@@ -90,7 +139,14 @@ export const PRODUCTS = [
     },
     {
     id: 'twilight-masquerade-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Twilight Masquerade Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: [],
     price: 599,
     stock: 12,
     images: [
@@ -103,7 +159,14 @@ export const PRODUCTS = [
     },
     {
     id: 'shrouded-fable-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Shrouded Fable Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: [],
     price: 599,
     stock: 6,
     images: [
@@ -116,7 +179,14 @@ export const PRODUCTS = [
     },
     {
     id: 'stellar-crown-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Stellar Crown Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: [],
     price: 549,
     stock: 18,
     images: [
@@ -129,7 +199,14 @@ export const PRODUCTS = [
     },
     {
     id: 'surging-sparks-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Surging Sparks Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: [],
     price: 599,
     stock: 18,
     images: [
@@ -142,7 +219,14 @@ export const PRODUCTS = [
     },
     {
     id: 'prismatic-evolutions-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Prismatic Evolutions Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: ["hot"],
     price: 1049,
     stock: 10,
     images: [
@@ -155,7 +239,14 @@ export const PRODUCTS = [
     },
     {
     id: 'journey-together-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Journey Together Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: [],
     price: 549,
     stock: 18,
     images: [
@@ -168,7 +259,14 @@ export const PRODUCTS = [
     },
     {
     id: 'destined-rivals-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Destined Rivals Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: [],
     price: 699,
     stock: 10,
     images: [
@@ -181,7 +279,14 @@ export const PRODUCTS = [
     },
     {
     id: 'black-bolt-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Black Bolt Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: ["hot"],
     price: 649,
     stock: 18,
     images: [
@@ -191,7 +296,14 @@ export const PRODUCTS = [
     },
     {
     id: 'white-flare-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "White Flare Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: [],
     price: 649,
     stock: 18,
     images: [
@@ -201,7 +313,14 @@ export const PRODUCTS = [
     },
     {
     id: 'mega-evolutions-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Mega Evolutions Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: [],
     price: 599,
     stock: 18,
     images: [
@@ -214,7 +333,14 @@ export const PRODUCTS = [
     },
     {
     id: 'phantasmal-flames-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Phantasmal Flames Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: [],
     price: 599,
     stock: 18,
     images: [
@@ -227,7 +353,14 @@ export const PRODUCTS = [
     },
     {
     id: 'ascended-heroes-booster-pack',
+    slug: "",
+    brand: "pokemon",
     name: "Ascended Heroes Booster Pack",
+    type: "booster-pack",
+    block: "scarlet-and-violet",
+    set: "",
+    releaseDate: "",
+    tags: ["hot"],
     price: 899,
     stock: 10,
     images: [

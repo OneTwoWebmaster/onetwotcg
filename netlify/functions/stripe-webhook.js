@@ -33,11 +33,19 @@ export const handler = async (event) => {
   }
 
   // Looking for a completed checkout session
-  if (stripeEvent.type === "checkout.session.completed") {
+    const isRelevantEvent = 
+      stripeEvent.type === "checkout.session.completed" ||
+      stripeEvent.type === "checkout.session.async_payment_succeeded";
+
+    if (!isRelevantEvent) {
+      return { statusCode: 200, body: "ok" };
+    }
+
     const session = stripeEvent.data.object;
-    console.log("Shipping details:", session.shipping_details);
-    console.log("customer_details:", session.customer_details);
-    console.log("Webhook session id:", session.id);
+
+    if (session.payment_status !== "paid") {
+      return { statusCode: 200, body: "ignored"};
+    }
 
     // update as paid
     const { data: order, error } = await supabase
@@ -46,7 +54,7 @@ export const handler = async (event) => {
         status: "paid",
         customer_email: session.customer_details?.email ?? null,
         stripe_payment_intent_id: session.payment_intent ?? null,
-        shipping: session.customer_details ?? session.customer_details ?? null,
+        shipping: session.customer_details ?? null,
       })
       .eq("stripe_session_id", session.id)
       .eq("status", "pending")
@@ -80,7 +88,6 @@ export const handler = async (event) => {
     console.error("Stock decrement failed:", e);
     return {statusCode: 500, body: "Stock decrement failed"};
   }
-  }
 
   return { statusCode: 200, body: "ok" };
-};
+  }

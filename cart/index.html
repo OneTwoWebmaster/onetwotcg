@@ -5,33 +5,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Two TCG</title>
-    <link rel="stylesheet" href="">
+    <title>One Two TCG | Store</title>
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/cart.css">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
     <header>
-        <nav class="template">
+        <div class="container">
+            <nav class="template">
 
-        </nav>
+            </nav>
+        </div>
     </header>
 
     <main>
-        <h1>Your Shopping Cart</h1>
+        <div class="shop-header">
+            <h2>Shopping Cart</h2>
+        </div>
 
-        <div id="cartEmpty"></div>
+        <div class="cart-message" id="cartEmpty" hidden></div>
 
-        <div id="cartItems"></div>
+        <div id="cartItems" hidden></div>
 
-        <div id="cartSummary">
+        <div class="cart-summary">
             <div id="cartTotal"></div>
             <div id="checkoutContainer"></div>
         </div>
     </main>
 
     <footer>
-        This is where footer content will go.
+        <div class="container footer">
+            
+        </div>
     </footer>
 
     <script type="module" src="/assets/js/cart.js"></script>
