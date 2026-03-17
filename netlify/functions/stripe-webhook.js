@@ -43,6 +43,10 @@ export const handler = async (event) => {
 
     const session = stripeEvent.data.object;
 
+    if (!session.client_reference_id) {
+      return { statusCode: 400, body: "Missing client_reference_id" };
+    }
+
     if (session.payment_status !== "paid") {
       return { statusCode: 200, body: "ignored"};
     }
@@ -53,10 +57,11 @@ export const handler = async (event) => {
       .update({
         status: "paid",
         customer_email: session.customer_details?.email ?? null,
+        stripe_session_id: session.id,
         stripe_payment_intent_id: session.payment_intent ?? null,
         shipping: session.customer_details ?? null,
       })
-      .eq("stripe_session_id", session.id)
+      .eq("id", session.client_reference_id)
       .eq("status", "pending")
       .select()
       .maybeSingle();
