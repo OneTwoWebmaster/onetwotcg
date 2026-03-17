@@ -1,7 +1,6 @@
 // Import functions
 import { loadCart } from "../../shared/cart-store.js"
 import { PRODUCTS } from "../../shared/products.js";
-import { createIcons, ShoppingBasket } from "https://unpkg.com/lucide@latest/dist/esm/lucide.js"
 
 // Query Selectors
 const nav = document.querySelector('.template');
@@ -60,7 +59,14 @@ nav.innerHTML = `
         </form>
         <a id="cart" href="/cart/">
         <span class="cart-icon-wrap">
-            <i data-lucide="shopping-basket"></i>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="shopping-basket" aria-hidden="true" class="lucide lucide-shopping-basket">
+            <path d="m15 11-1 9"></path>
+            <path d="m19 11-4-7"></path>
+            <path d="M2 11h20"></path>
+            <path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"></path>
+            <path d="M4.5 15.5h15"></path><path d="m5 11 4-7"></path>
+            <path d="m9 11 1 9"></path>
+            </svg>
         </span>
         <span class="cart-copy">
             <span class="cart-total">£${penniesToPounds(totalPennies)}</span>
@@ -89,9 +95,3 @@ footer.innerHTML = `
         <a href="#">Tik Tok</a>
     </div>
 `
-
-createIcons({
-    icons: {
-        ShoppingBasket
-    }
-});
