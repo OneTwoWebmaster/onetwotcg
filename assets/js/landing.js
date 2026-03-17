@@ -43,11 +43,11 @@ for (const product of newestFour) {
 
     newArrivals.innerHTML += `
       <article class="product-card">
-        <a class="product-media" href="product.html?id=${product.id}">
+        <a class="product-media" href="products/product.html?id=${product.id}">
           <img class="product-img" src="${product.images[0]}" height="200" />
         </a>
         <div class="product-body">
-          <a class="product-name" href="product.html?id=${product.id}">${product.name}</a>
+          <a class="product-name" href="products/product.html?id=${product.id}">${product.name}</a>
           <div class="product-meta">
             <div class="product-price">£${penniesToPounds(product.price)}</div>
             <div class="stock-status">${product.stock} in stock</div>
@@ -81,11 +81,11 @@ for (const product of hotFour) {
 
     hotProducts.innerHTML += `
       <article class="product-card">
-        <a class="product-media" href="product.html?id=${product.id}">
+        <a class="product-media" href="products/product.html?id=${product.id}">
           <img class="product-img" src="${product.images[0]}" height="200" />
         </a>
         <div class="product-body">
-          <a class="product-name" href="product.html?id=${product.id}">${product.name}</a>
+          <a class="product-name" href="products/product.html?id=${product.id}">${product.name}</a>
           <div class="product-meta">
             <div class="product-price">£${penniesToPounds(product.price)}</div>
             <div class="stock-status">${product.stock} in stock</div>
