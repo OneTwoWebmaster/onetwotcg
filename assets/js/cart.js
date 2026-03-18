@@ -83,7 +83,7 @@ const renderCartPage = state => {
         const linePennies = product.price * qty;
         totalPennies += linePennies;
 
-        const atMin = qty <= 1;
+        const atMin = qty <= 0;
         const atMax = qty >= product.stock;
         
         const row = document.createElement('div');
@@ -123,7 +123,7 @@ const renderCartPage = state => {
 
 // Event listeners
 cartItems.addEventListener("click", e => {
-    const btn = e.target.closest("#checkoutButton");
+    const btn = e.target.closest("button[data-action]");
     if (!btn) return;
 
     const action = btn.dataset.action;
