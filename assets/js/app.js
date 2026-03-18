@@ -50,8 +50,8 @@ export function updateCartUI() {
 
 // Nav content
 nav.innerHTML = `
-    <a href="/"><img src="/assets/images/logo.png" height="35" /></a>
-    <a href="/products/">PRODUCTS</a>
+    <a href="/" class="nav-logo"><img src="/assets/images/logo.png" height="35" /></a>
+    <a href="/products/" class="nav-products">PRODUCTS</a>
     <div class="nav-right">
         <form class="nav-search" action="/products/" method="GET">
             <input type="text" name="q" placeholder="Search Products" value="${currentQuery}">

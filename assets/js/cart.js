@@ -37,6 +37,16 @@ state.cart = loadCart();
 
 // Render logic
 const renderCartPage = state => {
+    for (const [id] of Object.entries(state.cart)) {
+    const product = state.products.find((p) => p.id === id);
+
+    if (!product || product.stock <= 0) {
+        delete state.cart[id];
+     }
+    }
+
+    saveCart(state.cart);
+
     const entries = Object.entries(state.cart);
 
     // Clear previous
@@ -63,7 +73,11 @@ const renderCartPage = state => {
 
     for (const [id, qty] of entries)    {
         const product = state.products.find((p) => p.id === id);
-        if (!product) continue;
+        
+        if (!product || product.stock <= 0) {
+        delete state.cart[id];
+        continue;
+        }
 
         const linePennies = product.price * qty;
         totalPennies += linePennies;
