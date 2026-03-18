@@ -1,8 +1,12 @@
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
+import { Resend } from "resend";
 
 // Create Stripe API
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+// Create Resend API
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Create DB client
 const supabase = createClient(
@@ -68,6 +72,19 @@ export const handler = async (event) => {
 
     if (error) return { statusCode: 500, body: "DB update failed" };
     if (!order) return { statusCode: 200, body: "ok"};
+
+    // E-mail confirmation code
+    await resend.emails.send({
+      from: "orders@onetwotcg.co.uk",
+      to: order.customer_email,
+      subject: "Order Confirmation - One Two TCG",
+      html: `
+        <h2>Thank you for your order!</h2>
+        <p>Order ID: ${order.id}</p>
+        <p>Total: £${(order.amount_total / 100).toFixed(2)}</p>
+        <p>We'll let you know when it's dispatched.</p>
+      `,
+    });
     
     // decrement and update stock in DB
     try {
