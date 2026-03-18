@@ -108,7 +108,7 @@ const renderCartPage = state => {
 
 // Event listeners
 cartItems.addEventListener("click", e => {
-    const btn = e.target.closest("button[data-action]");
+    const btn = e.target.closest("#checkoutButton");
     if (!btn) return;
 
     const action = btn.dataset.action;
@@ -151,24 +151,40 @@ cartItems.addEventListener("change", e => {
     })
 })
 
-checkoutContainer.addEventListener('click', async e => {
-    const btn = e.target.closest('button');
-    const items = Object.entries(state.cart).map(([id, qty]) => {
-        return {
-            id: id,
-            qty: qty
-        };
-    });
-    const res = await fetch("/.netlify/functions/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json"},
-        body: JSON.stringify({ items }),
-    });
-    console.log("status:", res.status);
-    const data = await res.json();
-    window.location.href = data.url;
-    console.log(JSON.stringify(data, null, 2));
-})
+checkoutContainer.addEventListener("click", async (e) => {
+    const btn = e.target.closest("#checkoutButton");
+    if (!btn) return;
+
+    const items = Object.entries(state.cart).map(([id, qty]) => ({
+        id,
+        qty,
+    }));
+
+    try {
+        const res = await fetch("/.netlify/functions/create-checkout-session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ items }),
+        });
+
+        const data = await res.json();
+        console.log("status:", res.status);
+        console.log(data);
+
+        if (!res.ok) {
+            throw new Error(data.error || "Checkout session creation failed");
+        }
+
+        if (!data.url) {
+            throw new Error("Missing checkout URL");
+        }
+
+        window.location.href = data.url;
+    } catch (err) {
+        console.error("Checkout failed:", err);
+        alert(err.message || "Checkout failed");
+    }
+});
 
 // State updater
 const setState = updater => {
