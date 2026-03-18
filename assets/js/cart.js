@@ -38,11 +38,11 @@ state.cart = loadCart();
 // Render logic
 const renderCartPage = state => {
     for (const [id] of Object.entries(state.cart)) {
-    const product = state.products.find((p) => p.id === id);
+        const product = state.products.find((p) => p.id === id);
 
-    if (!product || product.stock <= 0) {
-        delete state.cart[id];
-     }
+        if (!product || product.stock <= 0) {
+            delete state.cart[id];
+        }
     }
 
     saveCart(state.cart);
@@ -50,13 +50,14 @@ const renderCartPage = state => {
     const entries = Object.entries(state.cart);
 
     // Clear previous
-    cartItems.innerHTML = '';
-    cartEmpty.textContent = '';
-    cartTotal.textContent = '';
-    checkoutContainer.textContent = '';
+    cartItems.innerHTML = "";
+    cartEmpty.textContent = "";
+    cartTotal.textContent = "";
+    checkoutContainer.innerHTML = "";
 
     cartEmpty.hidden = true;
     cartItems.hidden = false;
+    checkoutContainer.hidden = false;
 
     if (entries.length === 0) {
         cartEmpty.hidden = false;
@@ -82,7 +83,7 @@ const renderCartPage = state => {
         const linePennies = product.price * qty;
         totalPennies += linePennies;
 
-        const atMin = qty <= 0;
+        const atMin = qty <= 1;
         const atMax = qty >= product.stock;
         
         const row = document.createElement('div');
@@ -96,15 +97,15 @@ const renderCartPage = state => {
             <div>Unit: £${penniesToPounds(product.price)}</div>
             <div>Qty: ${qty}</div>
             <div class="qty-controls">
-                <button data-action="dec" data-id="${product.id}" ${atMin ? "disabled" : ""}>-</button>
+                <button type="button" data-action="dec" data-id="${product.id}" ${atMin ? "disabled" : ""}>-</button>
                 <input type="number" data-id="${product.id}" min ="0" max="${product.stock}" step="1" size="2" value="${qty}" />
-                <button data-action="inc" data-id="${product.id}" ${atMax ? "disabled" : ""}>+</button>
+                <button type="button" data-action="inc" data-id="${product.id}" ${atMax ? "disabled" : ""}>+</button>
             </div>
         </div>
 
         <div class="cart-right">
             <div>Sub-total: £${penniesToPounds(linePennies)}</div>
-            <button data-action="remove" data-id="${product.id}">Remove</button>
+            <button type="button" data-action="remove" data-id="${product.id}">Remove</button>
         </div>
         `;
         cartItems.appendChild(row);
@@ -236,9 +237,13 @@ if (success === '1') {
 }
 
 if (canceled === "1") {
-    cartEmpty.hidden = false;
-    cartItems.hidden = true;
+    renderCartPage(state);
 
-    cartEmpty.textContent = 'Checkout cancelled';
+    cartEmpty.hidden = false;
+    cartItems.hidden = false;
+    checkoutContainer.hidden = false;
+
+    cartEmpty.textContent = "Checkout cancelled";
+
     history.replaceState({}, "", window.location.pathname);
 }
