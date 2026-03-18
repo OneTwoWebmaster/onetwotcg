@@ -73,18 +73,26 @@ export const handler = async (event) => {
     if (error) return { statusCode: 500, body: "DB update failed" };
     if (!order) return { statusCode: 200, body: "ok"};
 
-    // E-mail confirmation code
-    await resend.emails.send({
-      from: "orders@onetwotcg.co.uk",
-      to: order.customer_email,
-      subject: "Order Confirmation - One Two TCG",
-      html: `
-        <h2>Thank you for your order!</h2>
-        <p>Order ID: ${order.id}</p>
-        <p>Total: £${(order.amount_total / 100).toFixed(2)}</p>
-        <p>We'll let you know when it's dispatched.</p>
-      `,
-    });
+// E-mail confirmation code
+const { data: emailData, error: emailError } = await resend.emails.send({
+  from: "One Two TCG <orders@mail.onetwotcg.co.uk>",
+  to: order.customer_email,
+  subject: "Order Confirmation - One Two TCG",
+  html: `
+    <h2>Thank you for your order!</h2>
+    <p>Order ID: ${order.id}</p>
+    <p>Total: £${((order.amount_total + (order.shipping_amount || 0)) / 100).toFixed(2)}</p>
+    <p>We'll let you know when it's dispatched.</p>
+  `,
+});
+
+if (emailError) {
+  console.error("Resend send failed:", emailError);
+} else {
+  console.log("Resend email sent:", emailData);
+}
+
+    console.log("Resend result:", emailResult);
     
     // decrement and update stock in DB
     try {
