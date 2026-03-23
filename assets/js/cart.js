@@ -2,6 +2,7 @@
 import { PRODUCTS } from "../../shared/products.js";
 import { loadCart, saveCart, clearCart } from "../../shared/cart-store.js"
 import { updateCartUI } from "./app.js";
+import { applyLiveFieldsToProducts } from "../../shared/live-products.js";
 
 // DOM
 const cartEmpty = document.querySelector('#cartEmpty');
@@ -12,19 +13,12 @@ const checkoutContainer = document.querySelector('#checkoutContainer');
 // Utilities
 const penniesToPounds = pennies => (pennies / 100).toFixed(2);
 
-async function applyLiveFieldsToProducts(products) {
-  const res = await fetch("/.netlify/functions/get-products-live");
-  if (!res.ok) return; // keep static fallback
-  const data = await res.json();
-
-  const map = new Map(data.products.map(p => [p.id, p]));
-  for (const p of products) {
-    const live = map.get(p.id);
-    if (!live) continue;
-    // overwrite the fields that must be authoritative
-    p.price = live.price;
-    p.stock = live.stock;
-  }
+function getMaxAllowedQty(product) {
+    if (!product) return 0;
+    if (typeof product.maxPerOrder === "number") {
+        return Math.min(product.stock, product.maxPerOrder);
+    }
+    return product.stock;
 }
 
 // Define State
@@ -84,33 +78,44 @@ const renderCartPage = state => {
         totalPennies += linePennies;
 
         const atMin = qty <= 0;
-        const atMax = qty >= product.stock;
+        const maxAllowed = getMaxAllowedQty(product);
+        const atMax = qty >= maxAllowed;
         
         const row = document.createElement('div');
         row.classList.add('cart-row');
         row.innerHTML = `
-        <div class ="cart-left">
-        <strong>${product.name}</strong>
-        </div>
-
-        <div class="cart-mid">
-            <div>Unit: £${penniesToPounds(product.price)}</div>
-            <div>Qty: ${qty}</div>
-            <div class="qty-controls">
-                <button type="button" data-action="dec" data-id="${product.id}" ${atMin ? "disabled" : ""}>-</button>
-                <input type="number" data-id="${product.id}" min ="0" max="${product.stock}" step="1" size="2" value="${qty}" />
-                <button type="button" data-action="inc" data-id="${product.id}" ${atMax ? "disabled" : ""}>+</button>
+            <div class="cart-thumb">
+                <a href="/products/product.html?id=${product.id}">
+                    <img src="${product.images[0]}" alt="${product.name}">
+                </a>
             </div>
-        </div>
 
-        <div class="cart-right">
-            <div>Sub-total: £${penniesToPounds(linePennies)}</div>
-            <button type="button" data-action="remove" data-id="${product.id}">Remove</button>
-        </div>
+            <div class="cart-left">
+                <strong class="cart-product-name">${product.name}</strong>
+                <div>Unit: £${penniesToPounds(product.price)}</div>
+                <div>${product.stock} in stock</div>
+            </div>
+
+            <div class="cart-mid">
+                <div class="cart-qty-label">Qty: ${qty}</div>
+                <div class="qty-controls">
+                    <button type="button" data-action="dec" data-id="${product.id}" ${atMin ? "disabled" : ""}>-</button>
+                    <input type="number" data-id="${product.id}" min="0" max="${maxAllowed}" step="1" size="2" value="${qty}" />
+                    <button type="button" data-action="inc" data-id="${product.id}" ${atMax ? "disabled" : ""}>+</button>
+                </div>
+            </div>
+
+            <div class="cart-right">
+                <div>Sub-total: £${penniesToPounds(linePennies)}</div>
+                <button type="button" data-action="remove" data-id="${product.id}">Remove</button>
+            </div>
         `;
         cartItems.appendChild(row);
     }
-    cartTotal.textContent = `Total: £${penniesToPounds(totalPennies)}`;
+    cartTotal.innerHTML = `
+    Total: £${penniesToPounds(totalPennies)}
+    <div class="cart-shipping-note">Shipping will be added during checkout</div>
+    `;
     if (entries.length === 0) {
         checkoutContainer.textContent = '';
     } else if (entries.length > 0) {
@@ -135,13 +140,13 @@ cartItems.addEventListener("click", e => {
         const product = state.products.find((p) => p.id === id);
         if (!product) return;
 
-        const maxStock = product.stock;
+        const maxAllowed = getMaxAllowedQty(product);
 
         if (action === "dec" && currentQty > 0) {
             const lessQty = currentQty - 1;
             if (lessQty <= 0) delete state.cart[id];
             else state.cart[id] = lessQty;
-        } else if (action === "inc" && currentQty < maxStock) {
+        } else if (action === "inc" && currentQty < maxAllowed) {
             state.cart[id] = currentQty + 1;
         } else if (action === "remove") {
             delete state.cart[id];
@@ -159,10 +164,10 @@ cartItems.addEventListener("change", e => {
         const product = state.products.find((p) => p.id === id);
         if (!product) return;
 
-        const maxStock = product.stock;
+        const maxAllowed = getMaxAllowedQty(product);
 
         if (desiredQty <= 0) delete state.cart[id];
-        else state.cart[id] = Math.min(desiredQty, maxStock) 
+        else state.cart[id] = Math.min(desiredQty, maxAllowed)
     })
 })
 

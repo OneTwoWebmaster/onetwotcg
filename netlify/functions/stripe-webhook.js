@@ -14,6 +14,108 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+// E-mail Confirmations
+const SITE_URL = process.env.SITE_URL || "https://onetwotcg.netlify.app";
+const LOGO_URL = `${SITE_URL}/assets/images/logo.png`;
+
+function formatMoney(pennies) {
+  return `£${((pennies || 0) / 100).toFixed(2)}`;
+}
+
+function shippingLabel(method) {
+  return method === "free" ? "Free UK Shipping" : "UK Standard Shipping";
+}
+
+// Order confirmation
+function buildOrderConfirmationEmail(order) {
+  const subtotal = order.amount_total || 0;
+  const shipping = order.shipping_amount || 0;
+  const total = subtotal + shipping;
+
+  const itemsHtml = (order.items || [])
+    .map(
+      (item) => `
+        <tr>
+          <td style="padding:12px 0;border-bottom:1px solid #e6e6cc;">
+            <div style="font-weight:700;color:#191912;">${item.name}</div>
+            <div style="font-size:14px;color:#5a5a44;">Qty: ${item.qty}</div>
+          </td>
+          <td style="padding:12px 0;border-bottom:1px solid #e6e6cc;text-align:right;white-space:nowrap;color:#191912;">
+            ${formatMoney(item.line_total)}
+          </td>
+        </tr>
+      `
+    )
+    .join("");
+
+  return `
+    <div style="margin:0;padding:0;background:#f8f8ec;font-family:Georgia,serif;color:#191912;">
+      <div style="max-width:640px;margin:0 auto;padding:32px 16px;">
+        <div style="background:#fffef4;border:1px solid #e4e4c9;border-radius:12px;overflow:hidden;">
+          
+          <div style="background:#ffffd1;padding:24px 28px;border-bottom:1px solid #e4e4c9;text-align:center;">
+            <img src="${LOGO_URL}" alt="One Two TCG" style="max-width:180px;height:auto;display:block;margin:0 auto 12px;">
+            <div style="font-size:14px;color:#5a5a44;">Order confirmation</div>
+          </div>
+
+          <div style="padding:28px;">
+            <h2 style="margin:0 0 16px;font-size:24px;line-height:1.2;color:#191912;">
+              Thank you for your order
+            </h2>
+
+            <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#333326;">
+              We’ve received your order and payment successfully.
+            </p>
+
+            <p style="margin:0 0 22px;font-size:16px;line-height:1.6;color:#333326;">
+              <strong>Estimated dispatch:</strong> within 1–2 working days.
+            </p>
+
+            <div style="margin:0 0 24px;padding:16px;background:#ffffea;border:1px solid #ececcf;border-radius:8px;">
+              <div style="font-size:14px;color:#5a5a44;margin-bottom:6px;">Order ID</div>
+              <div style="font-size:15px;font-weight:700;color:#191912;word-break:break-word;">${order.id}</div>
+            </div>
+
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:24px;">
+              <tbody>
+                ${itemsHtml}
+              </tbody>
+            </table>
+
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:24px;">
+              <tbody>
+                <tr>
+                  <td style="padding:6px 0;color:#5a5a44;">Subtotal</td>
+                  <td style="padding:6px 0;text-align:right;color:#191912;">${formatMoney(subtotal)}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0;color:#5a5a44;">Shipping</td>
+                  <td style="padding:6px 0;text-align:right;color:#191912;">${formatMoney(shipping)}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 0 0;border-top:1px solid #e6e6cc;font-weight:700;color:#191912;">Total</td>
+                  <td style="padding:10px 0 0;border-top:1px solid #e6e6cc;text-align:right;font-weight:700;color:#191912;">
+                    ${formatMoney(total)}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div style="margin:0 0 24px;padding:16px;background:#ffffea;border:1px solid #ececcf;border-radius:8px;">
+              <div style="font-size:14px;color:#5a5a44;margin-bottom:6px;">Shipping method</div>
+              <div style="font-size:15px;font-weight:700;color:#191912;">${shippingLabel(order.shipping_method)}</div>
+            </div>
+
+            <p style="margin:0;font-size:14px;line-height:1.7;color:#5a5a44;">
+              We’ll email you again as soon as your order has been dispatched.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 // Netlify serverless function
 export const handler = async (event) => {
   // Stripe needs the raw request body to verify the signature
@@ -72,100 +174,6 @@ export const handler = async (event) => {
 
     if (error) return { statusCode: 500, body: "DB update failed" };
     if (!order) return { statusCode: 200, body: "ok"};
-
-// Build Confirmation E-mail
-function buildOrderConfirmationEmail(order) {
-  const subtotal = ((order.amount_total || 0) / 100).toFixed(2);
-  const shipping = ((order.shipping_amount || 0) / 100).toFixed(2);
-  const total = (((order.amount_total || 0) + (order.shipping_amount || 0)) / 100).toFixed(2);
-
-  const shippingLabel =
-    order.shipping_method === "free"
-      ? "Free UK Shipping"
-      : "UK Standard Shipping";
-
-  const itemsHtml = (order.items || [])
-    .map(
-      (item) => `
-        <tr>
-          <td style="padding: 10px 0; border-bottom: 1px solid #e5e5d8;">
-            <div style="font-weight: 600; color: #191912;">${item.name}</div>
-            <div style="font-size: 14px; color: #555540;">Qty: ${item.qty}</div>
-          </td>
-          <td style="padding: 10px 0; border-bottom: 1px solid #e5e5d8; text-align: right; white-space: nowrap; color: #191912;">
-            £${((item.line_total || 0) / 100).toFixed(2)}
-          </td>
-        </tr>
-      `
-    )
-    .join("");
-
-  return `
-    <div style="margin:0; padding:0; background:#f8f8ec; font-family: Merriweather, Georgia, serif; color:#191912;">
-      <div style="max-width:600px; margin:0 auto; padding:32px 20px;">
-        <div style="background:#fffef4; border:1px solid #e2e2c8; border-radius:12px; overflow:hidden;">
-          
-          <div style="background:#ffffd1; padding:24px 28px; border-bottom:1px solid #e2e2c8;">
-            <div style="font-size:24px; font-weight:700; color:#191912;">One Two TCG</div>
-            <div style="margin-top:6px; font-size:14px; color:#555540;">
-              Order confirmation
-            </div>
-          </div>
-
-          <div style="padding:28px;">
-            <h2 style="margin:0 0 16px; font-size:24px; line-height:1.2; color:#191912;">
-              Thank you for your order
-            </h2>
-
-            <p style="margin:0 0 18px; font-size:16px; color:#333326;">
-              We’ve received your order and will email you again once it has been dispatched.
-            </p>
-
-            <div style="margin:0 0 24px; padding:16px; background:#ffffea; border:1px solid #ececcf; border-radius:8px;">
-              <div style="font-size:14px; color:#555540; margin-bottom:6px;">Order ID</div>
-              <div style="font-size:15px; font-weight:600; color:#191912; word-break:break-word;">${order.id}</div>
-            </div>
-
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; margin-bottom:24px;">
-              <tbody>
-                ${itemsHtml}
-              </tbody>
-            </table>
-
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; margin-bottom:24px;">
-              <tbody>
-                <tr>
-                  <td style="padding:6px 0; color:#555540;">Subtotal</td>
-                  <td style="padding:6px 0; text-align:right; color:#191912;">£${subtotal}</td>
-                </tr>
-                <tr>
-                  <td style="padding:6px 0; color:#555540;">Shipping</td>
-                  <td style="padding:6px 0; text-align:right; color:#191912;">£${shipping}</td>
-                </tr>
-                <tr>
-                  <td style="padding:10px 0 0; font-weight:700; color:#191912; border-top:1px solid #e5e5d8;">Total</td>
-                  <td style="padding:10px 0 0; text-align:right; font-weight:700; color:#191912; border-top:1px solid #e5e5d8;">
-                    £${total}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div style="margin:0 0 24px; padding:16px; background:#ffffea; border:1px solid #ececcf; border-radius:8px;">
-              <div style="font-size:14px; color:#555540; margin-bottom:6px;">Shipping method</div>
-              <div style="font-size:15px; font-weight:600; color:#191912;">${shippingLabel}</div>
-            </div>
-
-            <p style="margin:0; font-size:14px; line-height:1.6; color:#555540;">
-              Questions? Reply to this email or contact us at
-              <a href="mailto:info@onetwotcg.co.uk" style="color:#23344a; text-decoration:none;">info@onetwotcg.co.uk</a>.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-}
 
 // E-mail confirmation code
 const { data: emailData, error: emailError } = await resend.emails.send({

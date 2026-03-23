@@ -12,6 +12,7 @@
     "packageJson": {
       "dependencies": [
         "npm:@supabase/supabase-js@^2.95.3",
+        "npm:resend@^6.9.4",
         "npm:stripe@^20.3.1"
       ]
     }

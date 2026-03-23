@@ -1,5 +1,6 @@
 // Modules
 import { PRODUCTS } from "../../shared/products.js";
+import { applyLiveFieldsToProducts } from "../../shared/live-products.js"
 import { loadCart, saveCart } from "../../shared/cart-store.js"
 import { updateCartUI } from "./app.js";
 
@@ -36,18 +37,12 @@ state.cart = loadCart();
 // Utilities
 const penniesToPounds = pennies => (pennies / 100).toFixed(2);
 
-async function applyLiveFieldsToProducts(products) {
-  const res = await fetch("/.netlify/functions/get-products-live");
-  if (!res.ok) return;
-  const data = await res.json();
-
-  const map = new Map(data.products.map(p => [p.id, p]));
-  for (const p of products) {
-    const live = map.get(p.id);
-    if (!live) continue;
-    p.price = live.price;
-    p.stock = live.stock;
+function getMaxAllowedQty(product) {
+  if (!product) return 0;
+  if (typeof product.maxPerOrder === "number") {
+    return Math.min(product.stock, product.maxPerOrder);
   }
+  return product.stock;
 }
 
 // Render
@@ -58,17 +53,15 @@ function renderProductList(products) {
   for (const product of products) {
     const qtyInCart = state.cart[product.id] || 0;
     const soldOut = product.stock <= 0;
-    const maxedOut = qtyInCart >= product.stock && product.stock > 0;
-    const disabledAdd = soldOut || maxedOut;
+    const maxAllowed = getMaxAllowedQty(product);
 
-    let buttonLabel = "ADD TO BASKET";
-    if (soldOut) {
-      buttonLabel = "OUT OF STOCK";
-    } else if (maxedOut) {
-      buttonLabel = `ADD TO BASKET (${qtyInCart})`;
-    } else if (qtyInCart > 0) {
-      buttonLabel = `ADD TO BASKET (${qtyInCart})`;
-    }
+    const stockMaxed = qtyInCart >= product.stock && product.stock > 0;
+    const orderLimitMaxed =
+      typeof product.maxPerOrder === "number" &&
+      product.maxPerOrder < product.stock &&
+      qtyInCart >= product.maxPerOrder;
+
+    const maxedOut = stockMaxed || orderLimitMaxed;
 
     productList.innerHTML += `
       <article class="product-card">
@@ -81,7 +74,39 @@ function renderProductList(products) {
             <div class="product-price">£${penniesToPounds(product.price)}</div>
             <div class="stock-status">${product.stock} in stock</div>
           </div>
-          <button class="btn btn-primary add-to-basket" data-id="${product.id}" type="button">${buttonLabel}</button>
+          <div class="card-qty-bar">
+          <button
+            class="qty-btn qty-decrease"
+            data-id="${product.id}"
+            data-action="decrease"
+            type="button"
+            ${qtyInCart <= 0 ? 'disabled' : ''}
+          >
+            −
+          </button>
+
+          <div class="qty-status ${
+            soldOut ? 'qty-status-disabled' : orderLimitMaxed ? 'qty-status-limit' : ''
+          }">
+            ${soldOut
+              ? 'OUT OF STOCK'
+              : orderLimitMaxed
+                ? `MAXIMUM: ${product.maxPerOrder}`
+                : qtyInCart > 0
+                  ? `IN BASKET (${qtyInCart})`
+                  : 'ADD TO BASKET'}
+          </div>
+
+          <button
+            class="qty-btn qty-increase"
+            data-id="${product.id}"
+            data-action="increase"
+            type="button"
+            ${soldOut || maxedOut ? 'disabled' : ''}
+          >
+            +
+          </button>
+          </div>
         </div>
       </article>
     `;
@@ -90,27 +115,46 @@ function renderProductList(products) {
 
 // Event handlers
 if (productList) {
-productList.addEventListener('click', e => {
-  const btn = e.target.closest("button[data-id]");
-  if(!btn) return;
+  productList.addEventListener('click', e => {
+    const btn = e.target.closest("button[data-id][data-action]");
+    if (!btn) return;
 
-  const id = btn.dataset.id;
-  const product = state.products.find(p => p.id === id);
-  if (!product) return;
-  if (product.stock <= 0) return;
-  state.cart = loadCart();
-  const current = state.cart[id] || 0;
-  if (current >= product.stock) return;
-  state.cart[id] = current + 1;
-  saveCart(state.cart);
-  updateCartUI();
-  btn.textContent = `ADD TO BASKET (${state.cart[id]})`;
-});
+    const id = btn.dataset.id;
+    const action = btn.dataset.action;
+
+    const product = state.products.find(p => p.id === id);
+    if (!product) return;
+
+    state.cart = loadCart();
+
+    const current = state.cart[id] || 0;
+
+    if (action === "increase") {
+      const maxAllowed = getMaxAllowedQty(product);
+
+      if (maxAllowed <= 0) return;
+      if (current >= maxAllowed) return;
+
+      state.cart[id] = current + 1;
+    }
+
+    if (action === "decrease") {
+      if (current <= 1) {
+        delete state.cart[id];
+      } else {
+        state.cart[id] = current - 1;
+      }
+    }
+
+    saveCart(state.cart);
+    updateCartUI();
+    renderProductList(productsToRender);
+  });
 }
 
 // Final renders
-renderProductList(productsToRender);
-
 applyLiveFieldsToProducts(state.products)
-  .then(() => renderProductList(productsToRender))
-  .catch(() => {});
+  .catch(() => {})
+  .finally(() => {
+    renderProductList(productsToRender);
+  });

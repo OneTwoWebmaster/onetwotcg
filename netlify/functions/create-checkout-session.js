@@ -42,7 +42,7 @@ export const handler = async (event) => {
 
     const { data: products, error: prodErr } = await supabase
     .from("products")
-    .select("id, name, price, stock")
+    .select("id, name, price, stock, max_per_order")
     .in("id", ids);
 
     if (prodErr) {
@@ -77,19 +77,34 @@ export const handler = async (event) => {
 
         const requestedQty = Number(item.qty);
         if (!Number.isFinite(requestedQty) || requestedQty <= 0) {
-        return {
-            statusCode: 400,
-            body: JSON.stringify({ error: `Invalid qty for product ${item.id}` }),
-        };
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ error: `Invalid qty for product ${item.id}` }),
+            };
         }
 
         if (product.stock <= 0) {
-        return {
-            statusCode: 400,
-            body: JSON.stringify({ error: `Out of stock: ${item.id}` }),
-        };
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ error: `Out of stock: ${item.id}` }),
+            };
         }
-        const safeQty = Math.min(Math.max(requestedQty, 1), product.stock);
+
+        const hasMaxPerOrder =
+            Number.isFinite(product.max_per_order) && product.max_per_order > 0;
+
+        if (hasMaxPerOrder && requestedQty > product.max_per_order) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({
+                    error: `${product.name} has a maximum order quantity of ${product.max_per_order}.`,
+                }),
+            };
+        }
+
+        const safeQty = hasMaxPerOrder
+            ? Math.min(Math.max(requestedQty, 1), product.stock, product.max_per_order)
+            : Math.min(Math.max(requestedQty, 1), product.stock);
 
         const linePennies = product.price * safeQty;
         totalPennies += linePennies;
@@ -99,7 +114,8 @@ export const handler = async (event) => {
             name: product.name,
             unit_price: product.price,
             qty: safeQty,
-            line_total: linePennies
+            line_total: linePennies,
+            max_per_order: product.max_per_order ?? null,
         });
     }
 
