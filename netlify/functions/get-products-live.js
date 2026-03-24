@@ -9,7 +9,7 @@ const supabase = createClient(
 export const handler = async () => {
   const { data, error } = await supabase
     .from("products")
-    .select("id, price, stock");
+    .select("id, price, stock, max_per_order");
 
   if (error) {
     return { statusCode: 500, body: JSON.stringify({ error: "DB read failed" }) };

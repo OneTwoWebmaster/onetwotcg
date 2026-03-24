@@ -147,6 +147,8 @@ fetchLiveProduct(id).then(live => {
     if (product) {
       product.price = live.price;
       product.stock = live.stock;
+      product.maxPerOrder =
+        typeof live.max_per_order === "number" ? live.max_per_order : undefined;
     }
   }
 

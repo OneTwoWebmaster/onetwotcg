@@ -7,7 +7,10 @@ export async function applyLiveFieldsToProducts(products) {
   for (const p of products) {
     const live = map.get(p.id);
     if (!live) continue;
+
     p.price = live.price;
     p.stock = live.stock;
+    p.maxPerOrder =
+      typeof live.max_per_order === "number" ? live.max_per_order : undefined;
   }
 }
