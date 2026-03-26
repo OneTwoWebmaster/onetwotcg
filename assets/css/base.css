@@ -39,6 +39,10 @@ textarea {
   font-family: inherit;
 }
 
+button {
+    color: #333324;
+}
+
 .section {
     padding: 1rem 0;
 }
@@ -50,10 +54,6 @@ h1, h2, h3 {
 
 p {
     margin: 0 0 1rem;
-}
-
-:root {
-    
 }
 
 a {
@@ -86,7 +86,6 @@ header {
 }
 
 .template input[type="text"] {
-    margin-left: auto;
     background: #fffff0;
 }
 
@@ -155,6 +154,11 @@ header {
     opacity: 0.9;
     color: black;
 }
+
+.nav-logo-img {
+    height: 35px;
+}
+
 
 .nav-search input {
     height: 30px;
@@ -284,7 +288,7 @@ footer h4 {
 @media (max-width: 767px) {
     .template {
         display: grid;
-        grid-template-columns: auto auto 1fr auto;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-template-areas:
             "logo products tiktok cart"
             "search search search search";
@@ -295,21 +299,28 @@ footer h4 {
 
     .nav-logo {
         grid-area: logo;
+        justify-self: start;
         padding: 0;
+    }
+    
+    .nav-logo-img {
+        height: 28px;
     }
 
     .nav-products {
-        grid-area: products;
-        justify-self: start;
-        padding: 0.2rem;
-        min-width: 0;
+    grid-area: products;
+    justify-self: center;
+    padding: 0;
+    min-width: 0;
+    gap: 0;
     }
 
     .nav-tiktok {
         grid-area: tiktok;
-        justify-self: start;
-        padding: 0.2rem;
+        justify-self: center;
+        padding: 0;
         min-width: 0;
+        gap: 0;
     }
 
     .nav-right {
@@ -335,8 +346,9 @@ footer h4 {
         display: flex;
         align-items: center;
         justify-self: end;
-        gap: 0.5rem;
+        gap: 0.2rem;
         min-width: 0;
+        padding: 0;
     }
 
     .cart-copy {
@@ -346,15 +358,15 @@ footer h4 {
     .cart-icon-wrap,
     .nav-products-icon-wrap,
     .tiktok-icon-wrap {
-        width: 32px;
-        height: 32px;
+        width: 40px;
+        height: 40px;
     }
 
     .cart-icon-wrap svg,
     .nav-products-icon-wrap svg,
     .tiktok-icon-wrap svg {
-        width: 18px;
-        height: 18px;
+        width: 22px;
+        height: 22px;
     }
 
     .nav-products-label,

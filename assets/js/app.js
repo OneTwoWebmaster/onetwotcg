@@ -72,7 +72,7 @@ export function updateCartUI() {
 
 // Nav content
 nav.innerHTML = `
-    <a href="/" class="nav-logo"><img src="/assets/images/logo.png" height="35" /></a>
+    <a href="/" class="nav-logo"><img src="/assets/images/logo.png" class="nav-logo-img" /></a>
     <a href="/products/" class="nav-products">
     <span class="nav-products-icon-wrap">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
