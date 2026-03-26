@@ -188,6 +188,7 @@ export const handler = async (event) => {
         session = await stripe.checkout.sessions.create({
         mode: "payment",
         line_items,
+        allow_promotion_codes: true,
         success_url: `${baseURL}/cart/index.html?success=1`,
         cancel_url: `${baseURL}/cart/index.html?canceled=1`,
         client_reference_id: String(order.id),
