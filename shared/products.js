@@ -111,7 +111,7 @@ export const PRODUCTS = [
     block: "scarlet-and-violet",
     set: "paldean-fates",
     releaseDate: "2024-01-26",
-    tags: [],
+    tags: ["hot"],
     price: 1399,
     stock: 11,
     maxPerOrder: 12,
@@ -328,13 +328,13 @@ export const PRODUCTS = [
     description: "Reunite with the Pokémon of Unova and rise to the top as a Trainer in a land of unity and legends! Evolve first partners Tepig and Oshawott all the way to Emboar and Samurott, and discover the undeniable power of truth with the region’s Legendary and Mythical Pokémon, including Reshiram ex and Keldeo ex. As you fill out your Pokédex, keep an eye out for special illustrations of each Pokémon and parallel cards with Poké Ball patterns in the Pokémon TCG: Scarlet & Violet—White Flare expansion!<ul><li>Booster pack contains 10 cards and 1 Basic Energy. Cards vary by pack.</li></li></ul>"
     },
     {
-    id: 'mega-evolutions-booster-pack',
+    id: 'mega-evolution-booster-pack',
     slug: "",
     brand: "pokemon",
-    name: "Mega Evolutions Booster Pack",
+    name: "Mega Evolution Booster Pack",
     type: "booster-pack",
-    block: "scarlet-and-violet",
-    set: "mega-evolutions-base",
+    block: "mega-evolution",
+    set: "mega-evolution-base",
     releaseDate: "2025-09-26",
     tags: [],
     price: 599,
@@ -354,7 +354,7 @@ export const PRODUCTS = [
     brand: "pokemon",
     name: "Phantasmal Flames Booster Pack",
     type: "booster-pack",
-    block: "scarlet-and-violet",
+    block: "mega-evolution",
     set: "phantasmal-flames",
     releaseDate: "2025-11-14",
     tags: [],
@@ -375,10 +375,10 @@ export const PRODUCTS = [
     brand: "pokemon",
     name: "Ascended Heroes Booster Pack",
     type: "booster-pack",
-    block: "scarlet-and-violet",
+    block: "mega-evolution",
     set: "ascended-heroes",
     releaseDate: "2026-01-30",
-    tags: ["hot"],
+    tags: [],
     price: 899,
     stock: 10,
     maxPerOrder: 12,
@@ -386,5 +386,26 @@ export const PRODUCTS = [
         "/products/images/me02a/ascended-heroes-booster-pack-01.png"
     ],
     description: "Marvel at the awesome potential as Mega Dragonite ex takes flight, leading a gathering of all-star Pokémon to battle! Trainer’s Pokémon and Stellar Tera Pokémon ex join returning and newly discovered Mega Evolution Pokémon ex, including some with special artwork showing off their biggest and boldest attacks. Celebrate the stars of Scarlet & Violet and the dawn of Mega Evolution with the Pokémon TCG: Mega Evolution—Ascended Heroes expansion!<ul><li>Booster pack contains 10 cards and 1 Basic Energy. Cards vary by pack.</li></li></ul>"
+    },
+    {
+    id: 'perfect-order-booster-pack',
+    slug: "",
+    brand: "pokemon",
+    name: "Perfect Order Booster Pack",
+    type: "booster-pack",
+    block: "mega-evolution",
+    set: "perfect-order",
+    releaseDate: "2026-03-27",
+    tags: [],
+    price: 499,
+    stock: 18,
+    maxPerOrder: 6,
+    images: [
+        "/products/images/me03/perfect-order-booster-pack-01.png",
+        "/products/images/me03/perfect-order-booster-pack-02.png",
+        "/products/images/me03/perfect-order-booster-pack-03.png",
+        "/products/images/me03/perfect-order-booster-pack-04.png"
+    ],
+    description: "The pulse of the city beats in sync with the Pokémon and people who call it home—and preserving the order of it all is Mega Zygarde ex, the Legendary Pokémon who embodies strength in numbers! With threatening forces held at bay, peaceful days are ahead for the city’s residents, including Pokémon like Mega Clefable ex, Mega Starmie ex, and Meowth ex, in the Pokémon TCG: Mega Evolution—Perfect Order expansion!<ul><li>Booster pack contains 10 cards and 1 Basic Energy. Cards vary by pack.</li></li></ul>"
     }
 ]
