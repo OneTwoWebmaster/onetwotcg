@@ -147,30 +147,24 @@ export const handler = async (event) => {
       return { statusCode: 200, body: "ok" };
     }
 
-    const session = stripeEvent.data.object;
+const session = stripeEvent.data.object;
 
-    if (!session.client_reference_id) {
-      return { statusCode: 400, body: "Missing client_reference_id" };
-    }
+const shippingDetails =
+  session.collected_information?.shipping_details ?? null;
 
-    if (session.payment_status !== "paid") {
-      return { statusCode: 200, body: "ignored"};
-    }
-
-    // update as paid
-    const { data: order, error } = await supabase
-      .from("orders")
-      .update({
-        status: "paid",
-        customer_email: session.customer_details?.email ?? null,
-        stripe_session_id: session.id,
-        stripe_payment_intent_id: session.payment_intent ?? null,
-        shipping: session.customer_details ?? null,
-      })
-      .eq("id", session.client_reference_id)
-      .eq("status", "pending")
-      .select()
-      .maybeSingle();
+const { data: order, error } = await supabase
+  .from("orders")
+  .update({
+    status: "paid",
+    customer_email: session.customer_details?.email ?? null,
+    stripe_session_id: session.id,
+    stripe_payment_intent_id: session.payment_intent ?? null,
+    shipping: shippingDetails,
+  })
+  .eq("id", session.client_reference_id)
+  .eq("status", "pending")
+  .select()
+  .maybeSingle();
 
     if (error) return { statusCode: 500, body: "DB update failed" };
     if (!order) return { statusCode: 200, body: "ok"};

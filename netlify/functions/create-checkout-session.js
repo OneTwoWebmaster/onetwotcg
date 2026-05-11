@@ -200,7 +200,7 @@ export const handler = async (event) => {
         shipping_address_collection: {
             allowed_countries: ["GB"],
         },
-        billing_address_collection: "auto",
+        billing_address_collection: "required",
         phone_number_collection: { enabled: true },
         shipping_options: shippingOptions,
     });
