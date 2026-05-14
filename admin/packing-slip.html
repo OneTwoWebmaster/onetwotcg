@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Packing Slip</title>
+  <link rel="stylesheet" href="/assets/css/print.css" />
+  <script type="module" src="/assets/js/packing-slip.js" defer></script>
+</head>
+<body>
+  <main class="packing-slip">
+    <header class="slip-header">
+      <div>
+        <h1><img src="/assets/images/logo.png" width="150" /></h1>
+        <p>Packing Slip</p>
+      </div>
+
+      <div class="slip-meta">
+        <p><strong>Order:</strong> <span id="orderId">—</span></p>
+        <p><strong>Date:</strong> <span id="orderDate">—</span></p>
+        <p><strong>Shipping:</strong> <span id="shippingMethod">—</span></p>
+      </div>
+    </header>
+
+    <section class="address-section">
+      <h2>Ship To</h2>
+      <div id="shippingAddress">
+        <p>Loading address...</p>
+      </div>
+    </section>
+
+    <section class="notes-section">
+      <p id="customerEmail"><strong>Email:</strong> —</p>
+    </section>
+
+    <section class="items-section">
+      <h2>Items</h2>
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Qty</th>
+          </tr>
+        </thead>
+        <tbody id="itemsBody">
+          <tr>
+            <td colspan="2">Loading items...</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="notes-section">
+      <p id="customerMessage">One Two TCG thank's you very much your order. We hope everything has arrived promptly and safely.</p>
+    </section>
+
+    <div class="print-actions no-print">
+      <button onclick="window.print()">Print</button>
+    </div>
+  </main>
+</body>
+</html>
