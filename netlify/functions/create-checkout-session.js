@@ -121,11 +121,11 @@ export const handler = async (event) => {
 
     // Determine shipping amount
     let shippingAmount = 0;
-    let shippingMethod = "free";
+    let shippingMethod = "Free";
 
-    if (totalPennies < 5000) {
-        shippingAmount = 329;
-        shippingMethod = "standard";
+    if (totalPennies < 10000) {
+        shippingAmount = 380;
+        shippingMethod = "Standard Priority";
     }
 
     // Stop if no valid items
@@ -178,7 +178,7 @@ export const handler = async (event) => {
                     amount: shippingAmount,
                     currency: "gbp",
                 },
-                display_name: shippingMethod === "free" ? "Free UK Priority Shipping" : "UK Priority Shipping",
+                display_name: shippingMethod === "Free" ? "Free UK Priority Shipping" : "UK Priority Shipping",
             },
         },
     ]
