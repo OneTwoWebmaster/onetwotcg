@@ -407,5 +407,26 @@ export const PRODUCTS = [
         "/products/images/me03/perfect-order-booster-pack-04.webp"
     ],
     description: "The pulse of the city beats in sync with the Pokémon and people who call it home—and preserving the order of it all is Mega Zygarde ex, the Legendary Pokémon who embodies strength in numbers! With threatening forces held at bay, peaceful days are ahead for the city’s residents, including Pokémon like Mega Clefable ex, Mega Starmie ex, and Meowth ex, in the Pokémon TCG: Mega Evolution—Perfect Order expansion!<ul><li>Booster pack contains 10 cards and 1 Basic Energy. Cards vary by pack.</li></li></ul>"
+    },
+    {
+    id: 'chaos-rising-booster-pack',
+    slug: "",
+    brand: "pokemon",
+    name: "Chaos Rising Booster Pack",
+    type: "booster-pack",
+    block: "mega-evolution",
+    set: "chaos-rising",
+    releaseDate: "2026-05-22",
+    tags: [],
+    price: 499,
+    stock: 18,
+    maxPerOrder: 6,
+    images: [
+        "/products/images/me04/chaos-rising-booster-pack-01.webp",
+        "/products/images/me04/chaos-rising-booster-pack-02.webp",
+        "/products/images/me04/chaos-rising-booster-pack-03.webp",
+        "/products/images/me04/chaos-rising-booster-pack-04.webp"
+    ],
+    description: "The hustle and bustle of the city turns into havoc as Mega Floette ex brings turmoil to the streets! Filled with courage and determination, Mega Greninja ex gathers other powerful Mega Evolution Pokémon ex, including Mega Pyroar ex and Mega Dragalge ex, to ward off this growing threat. As night falls, danger blossoms in the Pokémon TCG: Mega Evolution—Chaos Rising expansion!<ul><li>Booster pack contains 10 cards and 1 Basic Energy. Cards vary by pack.</li></li></ul>"
     }
 ]
