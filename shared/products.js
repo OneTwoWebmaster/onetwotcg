@@ -428,5 +428,26 @@ export const PRODUCTS = [
         "/products/images/me04/chaos-rising-booster-pack-04.webp"
     ],
     description: "The hustle and bustle of the city turns into havoc as Mega Floette ex brings turmoil to the streets! Filled with courage and determination, Mega Greninja ex gathers other powerful Mega Evolution Pokémon ex, including Mega Pyroar ex and Mega Dragalge ex, to ward off this growing threat. As night falls, danger blossoms in the Pokémon TCG: Mega Evolution—Chaos Rising expansion!<ul><li>Booster pack contains 10 cards and 1 Basic Energy. Cards vary by pack.</li></li></ul>"
+    },
+    {
+    id: 'pitch-black-booster-pack',
+    slug: "",
+    brand: "pokemon",
+    name: "Pitch Black Booster Pack",
+    type: "booster-pack",
+    block: "mega-evolution",
+    set: "pitch-black",
+    releaseDate: "2026-07-17",
+    tags: [],
+    price: 549,
+    stock: 100,
+    maxPerOrder: 18,
+    images: [
+        "/products/images/me05/pitch-black-booster-pack-01.webp",
+        "/products/images/me05/pitch-black-booster-pack-02.webp",
+        "/products/images/me05/pitch-black-booster-pack-03.webp",
+        "/products/images/me05/pitch-black-booster-pack-04.webp"
+    ],
+    description: "Twinkling city lights and a starry sky become obscured in darkness as Mega Darkrai ex arrives with mystery and malice! But Mega Zeraora ex fights back with thunderous strikes of lightning, leading the way for Mega Chandelure ex, Mega Excadrill ex, and more to join the fray. Shadows deepen and nightmares become reality in the Pokémon TCG: Mega Evolution—Pitch Black expansion!<ul><li>Booster pack contains 10 cards and 1 Basic Energy. Cards vary by pack.</li></li></ul>"
     }
 ]
