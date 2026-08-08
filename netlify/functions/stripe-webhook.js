@@ -182,6 +182,50 @@ if (emailError) {
 } else {
   console.log("Resend email sent:", emailData);
 }
+
+// Internal order notification
+const { data: adminEmailData, error: adminEmailError } = await resend.emails.send({
+  from: "One Two TCG <orders@mail.onetwotcg.co.uk>",
+  to: "info@onetwotcg.co.uk",
+  subject: `New One Two TCG order - ${formatMoney(
+    (order.amount_total || 0) + (order.shipping_amount || 0)
+  )}`,
+  html: `
+    <h2>New order received</h2>
+
+    <p><strong>Order ID:</strong> ${order.id}</p>
+    <p><strong>Customer:</strong> ${order.customer_email || "No email"}</p>
+
+    <h3>Items</h3>
+
+    <ul>
+      ${(order.items || [])
+        .map(
+          (item) =>
+            `<li>${item.qty} × ${item.name} — ${formatMoney(item.line_total)}</li>`
+        )
+        .join("")}
+    </ul>
+
+    <p><strong>Subtotal:</strong> ${formatMoney(order.amount_total)}</p>
+    <p><strong>Shipping:</strong> ${formatMoney(order.shipping_amount)}</p>
+
+    <p>
+      <strong>Total:</strong>
+      ${formatMoney(
+        (order.amount_total || 0) + (order.shipping_amount || 0)
+      )}
+    </p>
+
+    <p><strong>Shipping method:</strong> ${shippingLabel(order.shipping_method)}</p>
+  `,
+});
+
+if (adminEmailError) {
+  console.error("Internal order notification failed:", adminEmailError);
+} else {
+  console.log("Internal order notification sent:", adminEmailData);
+}
     
     // decrement and update stock in DB
     try {
