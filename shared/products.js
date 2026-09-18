@@ -111,7 +111,7 @@ export const PRODUCTS = [
     block: "scarlet-and-violet",
     set: "paldean-fates",
     releaseDate: "2024-01-26",
-    tags: ["hot"],
+    tags: [],
     price: 1399,
     stock: 11,
     maxPerOrder: 12,
@@ -300,7 +300,7 @@ export const PRODUCTS = [
     block: "scarlet-and-violet",
     set: "black-bolt",
     releaseDate: "2025-07-18",
-    tags: ["hot"],
+    tags: [],
     price: 649,
     stock: 18,
     maxPerOrder: 12,
@@ -336,7 +336,7 @@ export const PRODUCTS = [
     block: "mega-evolution",
     set: "mega-evolution-base",
     releaseDate: "2025-09-26",
-    tags: [],
+    tags: ["hot"],
     price: 599,
     stock: 18,
     maxPerOrder: 12,
@@ -378,7 +378,7 @@ export const PRODUCTS = [
     block: "mega-evolution",
     set: "ascended-heroes",
     releaseDate: "2026-01-30",
-    tags: [],
+    tags: ["hot"],
     price: 899,
     stock: 10,
     maxPerOrder: 12,
@@ -449,5 +449,23 @@ export const PRODUCTS = [
         "/products/images/me05/pitch-black-booster-pack-04.webp"
     ],
     description: "Twinkling city lights and a starry sky become obscured in darkness as Mega Darkrai ex arrives with mystery and malice! But Mega Zeraora ex fights back with thunderous strikes of lightning, leading the way for Mega Chandelure ex, Mega Excadrill ex, and more to join the fray. Shadows deepen and nightmares become reality in the Pokémon TCG: Mega Evolution—Pitch Black expansion!<ul><li>Booster pack contains 10 cards and 1 Basic Energy. Cards vary by pack.</li></li></ul>"
+    },
+    {
+    id: '30th-celebration-booster-pack',
+    slug: "",
+    brand: "pokemon",
+    name: "30th Celebration Booster Pack",
+    type: "booster-pack",
+    block: "mega-evolution",
+    set: "30th-celebration",
+    releaseDate: "2026-09-16",
+    tags: [],
+    price: 1299,
+    stock: 10,
+    maxPerOrder: 18,
+    images: [
+        "/products/images/me05a/30th-celebration-booster-pack-01.webp"
+    ],
+    description: "Commemorate 30 years of joy with fan-favorite Pokémon spanning three dazzling decades! Celebrate this magnificent milestone with the mighty presences of Mewtwo ex and Mew ex, followed by a wealth of allies like Umbreon ex, Salamence ex, and Greninja ex. Plus, there are 30 reasons to honor Pikachu, as each booster pack contains one—with 30 unique variations to collect as Pikachu rare cards! And, whether you’re looking forward to a glittering future or taking a nostalgic look at a storied past, there are a host of treasures to find and secrets to reveal in the Pokémon TCG: 30th Celebration!<ul><li>Each 30th Celebration booster pack contains 5 foil cards, 1 foil Basic Energy, and 1 Pokémon TCG Live code card. Cards vary by pack.</li></li></ul>"
     }
 ]
