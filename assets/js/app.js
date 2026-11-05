@@ -139,5 +139,7 @@ footer.innerHTML = `
     <div>
         <h4>One Two TCG</h4>
         <a href="/about/">About Us</a>
+        VAT Number: 525038215
     </div>
+
 `

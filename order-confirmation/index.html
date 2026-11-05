@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+
+    <title>Order Confirmation | One Two TCG</title>
+
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/order-confirmation.css">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <nav class="template"></nav>
+        </div>
+    </header>
+
+    <main>
+
+        <section class="confirmation-container">
+
+            <div id="confirmationLoading" class="confirmation-message">
+                Retrieving your order details...
+            </div>
+
+            <div id="confirmationError" class="confirmation-message confirmation-error" hidden>
+                We couldn't retrieve your order details.
+            </div>
+
+            <div id="confirmationContent" hidden>
+
+                <div class="confirmation-success">
+                    <div class="confirmation-check" aria-hidden="true">✓</div>
+                    <h2>Thank you for your order!</h2>
+                    <p>Your payment has been received successfully.</p>
+                    <p>A confirmation email will be sent to your email address.</p>
+                </div>
+
+                <div class="confirmation-details">
+                    <div class="confirmation-reference">
+                        <div>
+                            <strong>Order Reference</strong>
+                            <span id="confirmationOrderId"></span>
+                        </div>
+                        <div>
+                            <strong>Order Date</strong>
+                            <span id="confirmationDate"></span>
+                        </div>
+                    </div>
+
+                    <h3>Items Ordered</h3>
+                    <div id="confirmationItems"></div>
+
+                    <div class="confirmation-totals">
+                        <div>
+                            <span>Subtotal</span>
+                            <span id="confirmationSubtotal"></span>
+                        </div>
+                        <div>
+                            <span>Discount</span>
+                            <span id="confirmationDiscount"></span>
+                        </div>
+                        <div>
+                            <span>Shipping</span>
+                            <span id="confirmationShipping"></span>
+                        </div>
+                        <div class="confirmation-grand-total">
+                            <strong>Total Paid</strong>
+                            <strong id="confirmationTotal"></strong>
+                        </div>
+                    </div>
+
+                    <div class="confirmation-delivery">
+                        <h3>Delivery Details</h3>
+                        <address id="confirmationAddress"></address>
+                    </div>
+                </div>
+
+                <div class="confirmation-actions">
+                    <a href="/products/" class="confirmation-button">
+                        Continue Shopping
+                    </a>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer"></div>
+    </footer>
+
+    <script type="module" src="/assets/js/order-confirmation.js"></script>
+    <script type="module" src="/assets/js/app.js"></script>
+
+</body>
+</html>

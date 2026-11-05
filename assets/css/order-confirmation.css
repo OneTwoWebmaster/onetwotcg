@@ -1,0 +1,187 @@
+/* Main container */
+
+.confirmation-container {
+    width: min(900px, 96%);
+    margin: 1rem auto 3rem;
+}
+
+/* Loading and error messages */
+
+.confirmation-message {
+    padding: 1rem;
+    border: 1px solid #cccc92;
+    border-radius: 14px;
+    background: #ffffb7;
+    text-align: center;
+    font-weight: 600;
+}
+
+.confirmation-error {
+    color: #b42318;
+}
+
+/* Success message */
+
+.confirmation-success {
+    padding: 2rem 1rem;
+    border: 1px solid #cccc92;
+    border-radius: 14px;
+    background: #ffffb7;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.confirmation-check {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: #238636;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.confirmation-success h2 {
+    margin: 0 0 1rem;
+}
+
+.confirmation-success p {
+    margin: 0.5rem 0;
+}
+
+/* Order details */
+
+.confirmation-details {
+    padding: 1.5rem;
+    border: 1px solid #cccc92;
+    border-radius: 14px;
+    background: #ffffb7;
+}
+
+.confirmation-reference {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #cccc92;
+}
+
+.confirmation-reference > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.confirmation-reference span {
+    overflow-wrap: anywhere;
+}
+
+.confirmation-details h3 {
+    margin: 1.5rem 0 1rem;
+}
+
+/* Purchased products */
+
+.confirmation-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid #cccc92;
+}
+
+.confirmation-item span:last-child {
+    white-space: nowrap;
+}
+
+/* Order totals */
+
+.confirmation-totals {
+    margin-top: 1.5rem;
+}
+
+.confirmation-totals > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0;
+}
+
+.confirmation-grand-total {
+    margin-top: 0.75rem;
+    padding-top: 1rem !important;
+    border-top: 2px solid #b2b280;
+    font-size: 1.25rem;
+}
+
+/* Delivery details */
+
+.confirmation-delivery {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #cccc92;
+}
+
+.confirmation-delivery address {
+    margin-top: 0.75rem;
+    font-style: normal;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
+/* Continue shopping button */
+
+.confirmation-actions {
+    margin-top: 1rem;
+}
+
+.confirmation-button {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 30px;
+    border: 1px solid #b2b280;
+    border-radius: 5px;
+    background: #e5e5a4;
+    color: inherit;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.confirmation-button:hover {
+    background: #cccc92;
+    color: inherit;
+}
+
+/* Hidden sections */
+
+.confirmation-container [hidden] {
+    display: none !important;
+}
+
+/* Mobile layout */
+
+@media (max-width: 600px) {
+    .confirmation-container {
+        width: auto;
+        margin: 0.75rem;
+    }
+
+    .confirmation-details {
+        padding: 1rem;
+    }
+
+    .confirmation-reference {
+        flex-direction: column;
+    }
+
+    .confirmation-success {
+        padding: 1.5rem 1rem;
+    }
+}

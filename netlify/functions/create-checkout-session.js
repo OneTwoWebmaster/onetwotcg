@@ -124,7 +124,7 @@ export const handler = async (event) => {
     let shippingMethod = "Free";
 
     if (totalPennies < 10000) {
-        shippingAmount = 380;
+        shippingAmount = 390;
         shippingMethod = "Standard Priority";
     }
 
@@ -189,7 +189,7 @@ export const handler = async (event) => {
         mode: "payment",
         line_items,
         allow_promotion_codes: true,
-        success_url: `${baseURL}/cart/index.html?success=1`,
+        success_url: `${baseURL}/order-confirmation/?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${baseURL}/cart/index.html?canceled=1`,
         client_reference_id: String(order.id),
         metadata: {
@@ -230,6 +230,9 @@ export const handler = async (event) => {
 
     return {
         statusCode: 200,
-        body: JSON.stringify({ url: session.url}),       
+        body: JSON.stringify({
+    url: session.url,
+    sessionId: session.id
+}),      
     }
 };

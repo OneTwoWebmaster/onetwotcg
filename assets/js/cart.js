@@ -1,6 +1,6 @@
 // Imports
 import { PRODUCTS } from "../../shared/products.js";
-import { loadCart, saveCart, clearCart } from "../../shared/cart-store.js"
+import { loadCart, saveCart } from "../../shared/cart-store.js";
 import { updateCartUI } from "./app.js";
 import { applyLiveFieldsToProducts } from "../../shared/live-products.js";
 
@@ -195,11 +195,19 @@ checkoutContainer.addEventListener("click", async (e) => {
             throw new Error(data.error || "Checkout session creation failed");
         }
 
-        if (!data.url) {
-            throw new Error("Missing checkout URL");
-        }
+if (!data.url || !data.sessionId) {
+    throw new Error("Missing checkout session details");
+}
 
-        window.location.href = data.url;
+sessionStorage.setItem(
+    "onetwotcg_pending_checkout",
+    JSON.stringify({
+        sessionId: data.sessionId,
+        cart: { ...state.cart }
+    })
+);
+
+window.location.href = data.url;
     } catch (err) {
         console.error("Checkout failed:", err);
         alert(err.message || "Checkout failed");
@@ -220,26 +228,7 @@ renderCartPage(state);
 
 // Redirect
 const params = new URLSearchParams(window.location.search);
-const success = params.get('success');
 const canceled = params.get('canceled');
-
-if (success === '1') {
-    // clear cart
-    state.cart = {};
-    clearCart();
-    updateCartUI();
-
-    // show message
-    cartEmpty.hidden = false;
-    cartItems.hidden = true;
-
-    cartEmpty.textContent = 'Payment was successful';
-    cartItems.innerHTML = "";
-    cartTotal.textContent = "Total: £0.00";
-    checkoutContainer.textContent = "";
-
-    history.replaceState({}, "", window.location.pathname);
-}
 
 if (canceled === "1") {
     renderCartPage(state);

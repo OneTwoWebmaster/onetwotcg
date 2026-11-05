@@ -467,5 +467,26 @@ export const PRODUCTS = [
         "/products/images/me05a/30th-celebration-booster-pack-01.webp"
     ],
     description: "Commemorate 30 years of joy with fan-favorite Pokémon spanning three dazzling decades! Celebrate this magnificent milestone with the mighty presences of Mewtwo ex and Mew ex, followed by a wealth of allies like Umbreon ex, Salamence ex, and Greninja ex. Plus, there are 30 reasons to honor Pikachu, as each booster pack contains one—with 30 unique variations to collect as Pikachu rare cards! And, whether you’re looking forward to a glittering future or taking a nostalgic look at a storied past, there are a host of treasures to find and secrets to reveal in the Pokémon TCG: 30th Celebration!<ul><li>Each 30th Celebration booster pack contains 5 foil cards, 1 foil Basic Energy, and 1 Pokémon TCG Live code card. Cards vary by pack.</li></li></ul>"
+    },
+    {
+    id: 'delta-reign-booster-pack',
+    slug: "",
+    brand: "pokemon",
+    name: "Delta Reign Booster Pack",
+    type: "booster-pack",
+    block: "mega-evolution",
+    set: "delta-reign",
+    releaseDate: "2026-11-06",
+    tags: [],
+    price: 599,
+    stock: 10,
+    maxPerOrder: 18,
+    images: [
+        "/products/images/me06/delta-reign-booster-pack-01.webp",
+        "/products/images/me06/delta-reign-booster-pack-02.webp",
+        "/products/images/me06/delta-reign-booster-pack-03.webp",
+        "/products/images/me06/delta-reign-booster-pack-04.webp"
+    ],
+    description: "A thunderous roar from above heralds the descent of a renowned ruler of the sky! Mega Rayquaza ex brings unparallelled strength to battle, inspiring Mega Golurk ex, Mega Malamar ex, and Mega Golisopod ex to come forth and put their own skills to the test. Prevailing winds lead to legendary places and emerald-colored storms in the Pokémon TCG: Mega Evolution—Delta Reign expansion!<ul><li>Each booster pack contains 10 cards, 1 Basic Energy, and 1 Pokémon TCG Live code card. Cards vary by pack.</li></li></ul>"
     }
 ]
