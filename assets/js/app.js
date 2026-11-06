@@ -139,7 +139,29 @@ footer.innerHTML = `
     <div>
         <h4>One Two TCG</h4>
         <a href="/about/">About Us</a>
-        VAT Number: 525038215
-    </div>
+        VAT Number: 525038215<br>
 
+        <span style="display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; white-space: nowrap;">
+
+        <a href="https://www.instagram.com/onetwotcg" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="display: inline-flex; color: inherit;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="18" cy="6" r="1" fill="currentColor" stroke="none"/>
+            </svg>
+        </a>
+
+        <a href="https://www.facebook.com/61585547896682" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style="display: inline-flex; color: inherit;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.19 2.23.19v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.77l-.44 2.89h-2.33v6.99A10 10 0 0 0 22 12Z"/>
+            </svg>
+        </a>
+
+        </span>
+
+    </div>
 `
