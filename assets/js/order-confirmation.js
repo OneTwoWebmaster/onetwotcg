@@ -12,7 +12,6 @@ const orderDate = document.querySelector("#confirmationDate");
 const itemsContainer = document.querySelector("#confirmationItems");
 const subtotal = document.querySelector("#confirmationSubtotal");
 const discount = document.querySelector("#confirmationDiscount");
-const shipping = document.querySelector("#confirmationShipping");
 const total = document.querySelector("#confirmationTotal");
 const shippingMethod = document.querySelector("#confirmationShippingMethod");
 const address = document.querySelector("#confirmationAddress");
@@ -80,10 +79,6 @@ function renderConfirmation(order) {
     discount.textContent = order.discountAmount > 0
         ? `−${penniesToPounds(order.discountAmount)}`
         : penniesToPounds(0);
-
-    if (shipping) {
-        shipping.textContent = penniesToPounds(order.shippingAmount);
-    }
 
     total.textContent = penniesToPounds(order.totalPaid);
 
