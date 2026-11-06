@@ -1,5 +1,5 @@
 
-import { loadCart, clearCart } from "../../shared/cart-store.js";
+import { clearCart } from "../../shared/cart-store.js";
 import { updateCartUI } from "./app.js";
 
 // DOM
@@ -23,6 +23,24 @@ const penniesToPounds = pennies => `£${(pennies / 100).toFixed(2)}`;
 const params = new URLSearchParams(window.location.search);
 const sessionId = params.get("session_id");
 
+// Clear the basket for the checkout that just completed.
+// Do not clear a newer basket when revisiting an old order.
+const pending = sessionStorage.getItem("onetwotcg_pending_checkout");
+
+if (sessionId && pending) {
+    try {
+        const checkout = JSON.parse(pending);
+
+        if (checkout.sessionId === sessionId) {
+            clearCart();
+            updateCartUI();
+            sessionStorage.removeItem("onetwotcg_pending_checkout");
+        }
+    } catch (err) {
+        console.error("Unable to clear checkout basket:", err);
+    }
+}
+
 // Display an error
 function showError(message) {
     loading.hidden = true;
@@ -31,7 +49,7 @@ function showError(message) {
     errorMessage.textContent = message;
 }
 
-// Render the verified order
+// Render order details
 function renderConfirmation(order) {
     orderId.textContent = order.orderId;
 
@@ -41,7 +59,6 @@ function renderConfirmation(order) {
         year: "numeric",
     });
 
-    // Products
     itemsContainer.innerHTML = "";
 
     for (const item of order.items) {
@@ -58,16 +75,18 @@ function renderConfirmation(order) {
         itemsContainer.appendChild(row);
     }
 
-    // Totals
     subtotal.textContent = penniesToPounds(order.subtotal);
+
     discount.textContent = order.discountAmount > 0
         ? `−${penniesToPounds(order.discountAmount)}`
         : penniesToPounds(0);
 
-    shipping.textContent = penniesToPounds(order.shippingAmount);
+    if (shipping) {
+        shipping.textContent = penniesToPounds(order.shippingAmount);
+    }
+
     total.textContent = penniesToPounds(order.totalPaid);
 
-    // Delivery
     shippingMethod.textContent = order.shippingMethod || "UK Priority Shipping";
 
     const delivery = order.shippingAddress;
@@ -90,10 +109,10 @@ function renderConfirmation(order) {
     content.hidden = false;
 }
 
-// Retrieve the order
+// Retrieve order details
 async function loadConfirmation() {
     if (!sessionId) {
-        showError("No checkout session was provided.");
+        showError("We couldn't retrieve your order reference. Please contact us if you need assistance.");
         return;
     }
 
@@ -106,7 +125,9 @@ async function loadConfirmation() {
         const order = await response.json();
 
         if (response.status === 202) {
-            showError("Your payment is still being processed. Please refresh this page shortly.");
+            showError(
+                "Thank you for your order. Your payment status is still being confirmed. Please do not place another order."
+            );
             return;
         }
 
@@ -116,34 +137,12 @@ async function loadConfirmation() {
 
         renderConfirmation(order);
 
-        // Clear basket only after Stripe confirms payment
-// Only clear the basket associated with this checkout
-const pending = sessionStorage.getItem("onetwotcg_pending_checkout");
-
-if (pending) {
-    try {
-        const checkout = JSON.parse(pending);
-        const currentCart = loadCart();
-
-        if (
-            checkout.sessionId === sessionId &&
-            JSON.stringify(currentCart) === JSON.stringify(checkout.cart)
-        ) {
-            clearCart();
-            updateCartUI();
-        }
-
-        if (checkout.sessionId === sessionId) {
-            sessionStorage.removeItem("onetwotcg_pending_checkout");
-        }
-    } catch (err) {
-        console.error("Unable to verify pending basket:", err);
-    }
-}
-
     } catch (err) {
         console.error("Order confirmation failed:", err);
-        showError("We couldn't retrieve your order details. Please try refreshing this page.");
+
+        showError(
+            "Thank you for your order. We couldn't display your order details right now. Please do not make another payment. Contact us if you need assistance."
+        );
     }
 }
 
