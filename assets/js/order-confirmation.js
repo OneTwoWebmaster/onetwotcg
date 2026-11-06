@@ -13,7 +13,6 @@ const itemsContainer = document.querySelector("#confirmationItems");
 const subtotal = document.querySelector("#confirmationSubtotal");
 const discount = document.querySelector("#confirmationDiscount");
 const total = document.querySelector("#confirmationTotal");
-const shippingMethod = document.querySelector("#confirmationShippingMethod");
 const address = document.querySelector("#confirmationAddress");
 
 // Utilities
@@ -81,8 +80,6 @@ function renderConfirmation(order) {
         : penniesToPounds(0);
 
     total.textContent = penniesToPounds(order.totalPaid);
-
-    shippingMethod.textContent = order.shippingMethod || "UK Priority Shipping";
 
     const delivery = order.shippingAddress;
 
